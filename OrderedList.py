@@ -32,9 +32,6 @@ class OrderedList:
 				else:
 					return +1
 			return None
-		# -1 если v1 < v2
-		# 0 если v1 == v2
-		# +1 если v1 > v2
 
 	def add(self, value):
 		if self.head is None:
@@ -122,7 +119,6 @@ class OrderedList:
 		self.head = None
 		self.tail = None
 		self.__ascending = asc
-		pass # здесь будет ваш код
 
 	def len(self):
 		currNode = self.head
