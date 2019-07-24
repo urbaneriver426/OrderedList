@@ -11,81 +11,84 @@ class OrderedList:
 		self.__ascending = asc
 
 	def compare(self, v1, v2):
-		if self.len() == 0:
-			return None
+		if v1 < v2:
+			return -1
+		elif v1 == v2:
+			return 0
 		else:
-			currNode = self.head
-			v1Found= False
-			v2Found = False
-			while ((v1Found is False and v2Found is False) 
-				or currNode is not None):
-				if currNode.value == v1:
-					v1Found = True
-				if currNode.value == v2:
-					v2Found = True
-				currNode = currNode.next
-			if v1Found == True and v2Found == True:
-				if v1 < v2:
-					return -1
-				elif v1 == v2:
-					return 0
-				else:
-					return +1
-			return None
-
+			return +1
+		
 	def add(self, value):
 		if self.head is None:
 			self.head = Node(value)
 			self.tail = self.head
 		else:
-			currNode = self.head
-			prevNode = None
-			if currNode.next is not None:
-				currNode, prevNode = currNode.next, currNode 
+			if self.__ascending == True:
+				currNode = self.head
+				prevNode = None
 				cont = True
-				while cont == True:
-					if currNode is not None:
-						if (prevNode.value <= value <= currNode.value 
-							or prevNode.value >= value >= currNode):
-							cont = False
+				while cont == True and currNode is not None:
+					x = self.compare(value, currNode.value)
+					if x == 1:
+						currNode, prevNode = currNode.next, currNode
+					else:
+						if currNode is self.head:
+							currNode.prev = Node(value)
+							currNode.prev.next, self.head = self.head, currNode.prev
 						else:
-							currNode, prevNode = currNode.next, currNode
-					else:
+							currNode.prev = Node(value)
+							prevNode.next = currNode.prev
 						cont = False
-				if currNode is not None:
-					prevNode.next = Node(value)
-					currNode.prev = prevNode.next
-					prevNode.next.prev, prevNode.next.next = prevNode, currNode
-				else:
-					self.tail.next = Node(value)
-					self.tail.next.prev, self.tail = self.tail, self.tail.next
+				if currNode is None:
+					self.tail = Node(value)
+					self.tail.prev, prevNode.next = prevNode, self.tail
 			else:
-				if self.__ascending == True:
-					if currNode.value <= value:
-						self.tail = Node(value)
-						self.head.next, self.tail.prev = self.tail, self.head
+				currNode = self.tail
+				prevNode = None
+				cont = True
+				while cont == True and currNode is not None:
+					x = self.compare(value, currNode.value)
+					if x != -1:
+						currNode, prevNode = currNode.prev, currNode
 					else:
-						self.head = Node(value)
-						self.head.next, self.tail.prev = self.tail, self.head
-				else:
-					if currNode.value <= value:
-						self.head = Node(value)
-						self.head.next, self.tail.prev = self.tail, self.head
-					else:
-						self.tail = Node(value)
-						self.head.next, self.tail.prev = self.tail, self.head
+						if currNode is self.tail:
+							currNode.next = Node(value)
+							currNode.next.prev, self.tail = self.tail, currNode.next
+						else:
+							currNode.prev= Node(value)
+							prevNode.next = currNode.prev
+						cont = False
+				if currNode is None:
+					self.head = Node(value)
+					self.head.next, prevNode.prev = prevNode, self.head
 
 	def find(self, val):
 		if self.len() == 0:
 			return None
 		else:
-			currNode = self.head
-			while currNode.value != val or currNode is not None:
-				currNode = currNode.next
-			if currNode is not None:
-				return currNode
-			else:
+			if self.__ascending == True:
+				currNode = self.head
+				while currNode is not None:
+					x = self.compare(currNode.value, val)
+					if x == 1:
+						return None
+					elif x == 0:
+						return currNode
+					else:
+						currNode = currNode.next
+			if self.__ascending == False:
+				currNode = self.tail
+				while currNode is not None:
+					x = self.compare(currNode.value, val)
+					if x == 1:
+						return None
+					elif x == 0:
+						return currNode
+					else:
+						currNode = currNode.prev
+			if currNode == None:
 				return None
+
 
 	def delete(self, val):
 		currNode = self.head
@@ -135,3 +138,19 @@ class OrderedList:
 			r.append(node)
 			node = node.next
 		return r
+
+class OrderedStringList(OrderedList):
+	def __init__(self, asc):
+		self.head = None
+		self.tail = None
+		self.__ascending = asc
+
+	def compare(self, v1, v2):
+		test_string1 = v1.strip()
+		test_string2 = v2.strip()
+		if v1 < v2:
+			return -1
+		elif v1 == v2:
+			return 0
+		else:
+			return +1
