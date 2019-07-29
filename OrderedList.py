@@ -141,9 +141,7 @@ class OrderedList:
 
 class OrderedStringList(OrderedList):
 	def __init__(self, asc):
-		self.head = None
-		self.tail = None
-		self.__ascending = asc
+		super(OrderedStringList, self).__init__(asc)
 
 	def compare(self, v1, v2):
 		test_string1 = v1.strip()
