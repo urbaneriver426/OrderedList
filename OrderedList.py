@@ -32,16 +32,18 @@ class OrderedList:
 					if x == 1:
 						currNode, prevNode = currNode.next, currNode
 					else:
-						if currNode is self.head:
-							currNode.prev = Node(value)
-							currNode.prev.next, self.head = self.head, currNode.prev
-						else:
-							currNode.prev = Node(value)
-							prevNode.next = currNode.prev
 						cont = False
 				if currNode is None:
 					self.tail = Node(value)
 					self.tail.prev, prevNode.next = prevNode, self.tail
+				else:
+					if currNode is self.head:
+						currNode.prev = Node(value)
+						currNode.prev.next, self.head = self.head, currNode.prev
+					else:
+						currNode.prev = Node(value)
+						prevNode.next = currNode.prev
+						currNode.prev.prev, currNode.prev.next = prevNode, currNode
 			else:
 				currNode = self.tail
 				prevNode = None
@@ -50,17 +52,19 @@ class OrderedList:
 					x = self.compare(value, currNode.value)
 					if x != -1:
 						currNode, prevNode = currNode.prev, currNode
-					else:
-						if currNode is self.tail:
-							currNode.next = Node(value)
-							currNode.next.prev, self.tail = self.tail, currNode.next
-						else:
-							currNode.prev= Node(value)
-							prevNode.next = currNode.prev
+					else:			
 						cont = False
 				if currNode is None:
 					self.head = Node(value)
 					self.head.next, prevNode.prev = prevNode, self.head
+				else:
+					if currNode is self.tail:
+						currNode.next = Node(value)
+						currNode.next.prev, self.tail = self.tail, currNode.next
+					else:
+						currNode.next = Node(value)
+						prevNode.prev = currNode.next
+						currNode.next.next, currNode.next.prev = prevNode, currNode
 
 	def find(self, val):
 		if self.len() == 0:
